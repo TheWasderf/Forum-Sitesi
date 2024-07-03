@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Thread.Title}}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <section class="thread">
+        <h1>{{.Thread.Title}}</h1>
+        <p>Created by: {{.Username}}</p>
+        <p>{{.Thread.Description}}</p>
+        <h3>Categories:</h3>
+        <ul>
+            {{range .Categories}}
+            <li>{{.}}</li>
+            {{end}}
+        </ul>
+        <h2>Comments</h2>
+        {{range .Comments}}
+        <div class="comment-box">
+            <p>{{.Content}} - by {{.Username}}</p>
+            <p>Likes: {{.Likes}}, Dislikes: {{.Dislikes}}</p>
+            <form method="post" action="/comment-like-dislike">
+                <input type="hidden" name="comment_id" value="{{.ID}}">
+                <input type="hidden" name="thread_id" value="{{$.Thread.ID}}">
+                <button type="submit" name="like_type" value="1">Like</button>
+                <button type="submit" name="like_type" value="-1">Dislike</button>
+            </form>
+        </div>
+        {{end}}
+        <form method="post" action="/comment">
+            <input type="hidden" name="thread_id" value="{{.Thread.ID}}">
+            <textarea name="comment" placeholder="Write a comment..." required></textarea>
+            <button type="submit">Post Comment</button>
+        </form>
+        <p>Likes: {{.Thread.Likes}}</p>
+        <p>Dislikes: {{.Thread.Dislikes}}</p>
+        {{if not .IsGuest}}
+        <form method="post" action="/like-dislike">
+            <input type="hidden" name="thread_id" value="{{.Thread.ID}}">
+            <button type="submit" name="like_type" value="1">Like</button>
+            <button type="submit" name="like_type" value="-1">Dislike</button>
+        </form>
+        {{end}}
+    </section>
+</body>
+</html>
